@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { projects, skillGroups, memories } from "@/data/portfolio";
+import { openAstraChat } from "@/components/AstraOrb";
 
 const stages = [
   {
@@ -81,7 +82,7 @@ export default function CommandCentre() {
         const i = stages.findIndex((s) => s.id === cur);
         return stages[(i + 1) % stages.length]!.id;
       });
-    }, 4200);
+    }, 3800);
     return () => clearInterval(t);
   }, [touched]);
   const active = stages.find((s) => s.id === activeId) ?? stages[0]!;
@@ -137,6 +138,34 @@ export default function CommandCentre() {
           ))}
         </div>
 
+        {/* Auto-cycle progress: a bar that fills across each 3.8s stage so the
+            loop is visibly running, plus a way back into auto-play after a
+            visitor takes control by tapping a stage. */}
+        <div className="mt-5 flex items-center gap-3">
+          <div className="h-1 flex-1 overflow-hidden rounded-full" style={{ background: "var(--border)" }} aria-hidden="true">
+            {!touched ? (
+              <div key={active.id} className="cc-progress-bar h-full w-full rounded-full" style={{ background: "var(--accent)" }} />
+            ) : (
+              <div className="h-full w-full rounded-full opacity-40" style={{ background: "var(--accent)" }} />
+            )}
+          </div>
+          <p className="shrink-0 text-[10px] uppercase tracking-[0.2em]" style={{ color: "var(--muted)" }}>
+            Stage {stages.findIndex((s) => s.id === active.id) + 1} / {stages.length}
+            {!touched ? " · auto-cycling" : ""}
+          </p>
+          {touched && (
+            <button
+              type="button"
+              onClick={() => setTouched(false)}
+              className="shrink-0 rounded-full border px-3 py-1.5 text-[11px] font-semibold"
+              style={{ borderColor: "var(--accent)", color: "var(--accent)" }}
+              aria-label="Resume automatic cycling of the command centre stages"
+            >
+              ▶ Resume auto-cycle
+            </button>
+          )}
+        </div>
+
         <div key={active.id} className="stage-in border-t pt-5" style={{ borderColor: "var(--border)" }} aria-live="polite">
           <p className="text-[11px] uppercase tracking-widest" style={{ color: "var(--accent)" }}>
             Stage · {active.label} — {active.project}
@@ -179,9 +208,14 @@ export default function CommandCentre() {
             <a href="#lab" className="btn-ghost block w-full rounded-xl px-4 py-3 text-left text-sm font-medium">
               ◈ Explore the AgentForge system map
             </a>
-            <a href="#astra" className="btn-ghost block w-full rounded-xl border-dashed px-4 py-3 text-left text-sm">
-              ◉ Ask <strong>ASTRA</strong> — see the verified answers →
-            </a>
+            <button
+              type="button"
+              onClick={openAstraChat}
+              aria-label="Open ASTRA chat and ask about any project"
+              className="btn-ghost block w-full rounded-xl border-dashed px-4 py-3 text-left text-sm"
+            >
+              ◉ Ask <strong>ASTRA</strong> — open the chat and ask about any project →
+            </button>
           </div>
         </div>
       </div>

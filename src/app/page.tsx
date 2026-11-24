@@ -2,6 +2,10 @@ import Link from "next/link";
 import Photo from "@/components/Photo";
 import NeuralCanvas from "@/components/NeuralCanvas";
 import CommandCentre from "@/components/CommandCentre";
+import TechTicker from "@/components/TechTicker";
+import OriginPaths from "@/components/OriginPaths";
+import Reveal from "@/components/Reveal";
+import ContactSurface from "@/components/ContactSurface";
 import SafeGenLab from "@/components/SafeGenLab";
 import AgentForgeMap from "@/components/AgentForgeMap";
 import {
@@ -58,18 +62,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Command Centre */}
-      <div className="mx-auto max-w-6xl px-4 pb-10"><CommandCentre /></div>
+      {/* Tech ticker + Command Centre */}
+      <TechTicker />
+      <div className="mx-auto max-w-6xl px-4 pt-10 pb-10"><CommandCentre /></div>
 
       {/* Origin */}
+      <Reveal>
       <section id="about" className="mx-auto max-w-6xl px-4 py-10">
         <p className="eyebrow">The Origin</p>
         <h2 className="section-title mt-1">How I got here</h2>
         <p className="mt-4 max-w-3xl leading-relaxed" style={{ color: "var(--muted)" }}>{profile.origin}</p>
-        <div className="mt-6 flex flex-wrap gap-2">
-          {profile.careerDirections.map((d) => <span key={d} className="chip">{d}</span>)}
+        <p className="mt-6 text-sm" style={{ color: "var(--muted)" }}>Four paths, in order — tap any one to see what it means and the work behind it.</p>
+        <div className="mt-4">
+          <OriginPaths />
         </div>
+        <p className="mt-6 text-sm"><Link href="/about">Full About page →</Link></p>
       </section>
+      </Reveal>
 
       {/* Projects */}
       <section id="projects" className="mx-auto max-w-6xl px-4 py-10">
@@ -112,6 +121,7 @@ export default function Home() {
       </section>
 
       {/* Timeline */}
+      <Reveal>
       <section className="mx-auto max-w-6xl px-4 py-10">
         <p className="eyebrow">Education & Experience</p>
         <h2 className="section-title mt-1">Timeline</h2>
@@ -142,8 +152,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </Reveal>
 
       {/* Memories */}
+      <Reveal>
       <section id="memories" className="mx-auto max-w-6xl px-4 py-10">
         <p className="eyebrow">Memories</p>
         <h2 className="section-title mt-1">Academic & personal moments</h2>
@@ -161,6 +173,7 @@ export default function Home() {
           ))}
         </div>
       </section>
+      </Reveal>
 
       {/* AgentForge + AI Lab */}
       <section id="lab" className="mx-auto max-w-6xl space-y-6 px-4 py-10">
@@ -168,12 +181,13 @@ export default function Home() {
         <SafeGenLab />
       </section>
 
-      {/* ASTRA — static grounded FAQ (the full server assistant lives in the Muse artifact) */}
+      {/* ASTRA — live on-device chat orb (bottom-right) + grounded FAQ */}
       <section id="astra" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-10">
         <p className="eyebrow">Ask ASTRA</p>
         <h2 className="section-title mt-1">Answers, grounded only in this portfolio</h2>
         <p className="mt-2 text-sm" style={{ color: "var(--muted)" }}>
-          The full ASTRA assistant lives in the Muse-hosted portfolio. These are the verified answers it gives most often.
+          Tap <strong style={{ color: "var(--text)" }}>Ask ASTRA</strong> in the bottom-right corner to chat — it answers
+          on-device from this portfolio&apos;s published data. These are the verified answers it gives most often.
         </p>
         <div className="mt-6 space-y-3">
           {faqs.map((f) => (
@@ -185,19 +199,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact */}
+      {/* Contact — same channels + form as the Contact page */}
       <section id="contact" className="mx-auto max-w-6xl px-4 py-10">
         <p className="eyebrow">Contact</p>
-        <h2 className="section-title mt-1">Let&apos;s talk</h2>
+        <h2 className="section-title mt-1">Let&apos;s build something intelligent.</h2>
         <p className="mt-2 text-sm" style={{ color: "var(--muted)" }}>
-          This export has no server inbox — your message opens your mail app addressed to Shivam.
-          The contact inbox with spam filtering lives in the Muse-hosted portfolio.
+          Recruiters, collaborators, fellow builders — my inbox is open. I reply personally.
         </p>
-        <div className="card mt-6 p-5">
-          <p><strong>Email:</strong> <a href={`mailto:${profile.email}`}>{profile.email}</a></p>
-          <p className="mt-2"><strong>Location:</strong> {profile.location}</p>
-          <p className="mt-4"><a className="btn" href={`mailto:${profile.email}?subject=Hello%20Shivam%20—%20from%20your%20portfolio`}>Email Shivam</a></p>
+        <div className="mt-6">
+          <ContactSurface compact />
         </div>
+        <p className="mt-6 text-sm"><Link href="/contact">Full Contact page →</Link></p>
       </section>
     </div>
   );

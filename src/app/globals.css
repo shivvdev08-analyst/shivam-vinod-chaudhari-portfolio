@@ -44,7 +44,35 @@ a { color: var(--accent); }
 .forge-node-float { animation: forge-float 3.2s ease-in-out infinite; }
 @keyframes forge-breathe { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 25%, transparent); } 50% { box-shadow: 0 0 28px 4px color-mix(in srgb, var(--accent) 22%, transparent); } }
 .forge-core { animation: forge-breathe 3.2s ease-in-out infinite; }
+
+/* Reveal-on-scroll (v9): sections rise in as they enter the viewport. */
+.reveal { opacity: 0; transform: translateY(22px); }
+.reveal.is-visible { opacity: 1; transform: translateY(0); transition: opacity .7s cubic-bezier(.22, 1, .36, 1), transform .7s cubic-bezier(.22, 1, .36, 1); }
+
+/* Tech ticker band (v9): the stack streaming right-to-left, edge-faded. */
+@keyframes marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.tech-ticker { overflow: hidden; mask-image: linear-gradient(to right, transparent, black 7%, black 93%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 7%, black 93%, transparent); }
+.tech-ticker-track { display: flex; width: max-content; animation: marquee-scroll 30s linear infinite; }
+.tech-ticker:hover .tech-ticker-track { animation-play-state: paused; }
+
+/* Command-centre auto-cycle progress (v9): fills over one 3.8s stage. */
+@keyframes cc-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.cc-progress-bar { transform-origin: left; animation: cc-progress 3.8s linear both; }
+
+/* ASTRA orb (v9). */
+@keyframes orb-breathe { 0%, 100% { box-shadow: 0 10px 30px rgba(0,0,0,.45); } 50% { box-shadow: 0 10px 30px rgba(0,0,0,.45), 0 0 0 6px color-mix(in srgb, var(--accent) 18%, transparent); } }
+.anim-orb { animation: orb-breathe 3.2s ease-in-out infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+.anim-blink { animation: blink 1.6s ease-in-out infinite; }
+@keyframes panel-in { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.panel-in { animation: panel-in .25s ease-out; }
+@keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: .4; } 30% { transform: translateY(-3px); opacity: 1; } }
+.typing-dot { width: 5px; height: 5px; border-radius: 999px; background: currentColor; display: inline-block; animation: typing 1s infinite; }
+.typing-dot:nth-child(2) { animation-delay: .15s; }
+.typing-dot:nth-child(3) { animation-delay: .3s; }
+
 @media (prefers-reduced-motion: reduce) {
-  .stage-in, .forge-line-flow, .forge-node-float, .forge-core { animation: none; }
+  .stage-in, .forge-line-flow, .forge-node-float, .forge-core, .reveal, .tech-ticker-track, .cc-progress-bar, .anim-orb, .anim-blink, .panel-in, .typing-dot { animation: none; }
+  .reveal { opacity: 1; transform: none; }
   html { scroll-behavior: auto; }
 }

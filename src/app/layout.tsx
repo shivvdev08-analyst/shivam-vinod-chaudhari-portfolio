@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import ScrollProgress from "@/components/ScrollProgress";
+import AstraOrb from "@/components/AstraOrb";
 import { profile, seo } from "@/data/portfolio";
 
 export const metadata: Metadata = {
@@ -23,11 +24,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </a>
             <nav className="flex flex-wrap gap-4 text-sm" aria-label="Main">
               <a href="/#projects">Projects</a>
-              <a href="/#about">About</a>
+              <a href="/about">About</a>
               <a href="/#skills">Skills</a>
               <a href="/#memories">Memories</a>
               <a href="/#lab">AI Lab</a>
-              <a href="/#contact">Contact</a>
+              <a href="/contact">Contact</a>
             </nav>
             <ThemeSwitcher />
           </div>
@@ -41,16 +42,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {" · "}
               <a href="/resume">Resume</a>
               {" · "}
+              <a href="/contact">Contact</a>
+              {" · "}
               <a href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
               {" · "}
               <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
             </p>
             <p className="mt-2">
-              Owner Admin, the contact inbox, analytics and the full ASTRA assistant live in the Muse-hosted
-              portfolio — this Vercel export is the public site only. See README.md in this repo.
+              Owner Admin, the contact inbox and analytics live in the Muse-hosted
+              portfolio — this Vercel export is the public site only. ASTRA here
+              answers on-device from the published portfolio data. See README.md in this repo.
             </p>
           </div>
         </footer>
+        <AstraOrb />
       </body>
     </html>
   );
