@@ -6,9 +6,10 @@ import { openAstraChat } from "@/components/AstraOrb";
 /**
  * Direct contact channels, shared verbatim by the homepage contact section
  * and the Contact page — one component, so the two surfaces are identical
- * by construction. This static export has no server inbox: submitting the
- * form opens the visitor's mail app addressed to Shivam (stated honestly
- * on the form), instead of pretending the message was stored.
+ * by construction. Submitting the form now POSTs to /api/contact, which
+ * stores the message in the Neon inbox when the server is configured;
+ * only when no database is configured yet does it fall back to opening
+ * the visitor's mail app addressed to Shivam (stated honestly on the form).
  */
 export function ContactChannels({ compact }: { compact?: boolean }) {
   const p = profile;
@@ -62,29 +63,59 @@ export function ContactForm() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
+  const [stored, setStored] = useState(false);
+  const [sending, setSending] = useState(false);
   const cls = "w-full rounded-xl border px-3.5 py-2.5 text-sm outline-none";
   const style = { borderColor: "var(--border)", background: "var(--bg)", color: "var(--text)" } as const;
 
-  const submit = (e: FormEvent) => {
-    e.preventDefault();
-    setError("");
-    if (form.name.trim().length < 2) return setError("Please add your name.");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) return setError("Please add a valid email so Shivam can reply.");
-    if (form.message.trim().length < 10) return setError("Please write a message of at least 10 characters.");
+  const openMailto = () => {
     const subject = encodeURIComponent(form.subject.trim() || "Hello Shivam — from your portfolio");
     const body = encodeURIComponent(
       `Hi Shivam,\n\n${form.message.trim()}\n\n— ${form.name.trim()} (${form.email.trim()})`
     );
     window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
-    setSent(true);
+  };
+
+  const submit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (form.name.trim().length < 2) return setError("Please add your name.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) return setError("Please add a valid email so Shivam can reply.");
+    if (form.message.trim().length < 10) return setError("Please write a message of at least 10 characters.");
+    setSending(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = (await res.json().catch(() => ({}))) as { stored?: boolean; mailtoFallback?: boolean };
+      if (res.ok && data.stored) {
+        setStored(true);
+        setSent(true);
+        return;
+      }
+      // No database configured yet (or a server error): fall back to mailto.
+      openMailto();
+      setStored(false);
+      setSent(true);
+    } catch {
+      openMailto();
+      setStored(false);
+      setSent(true);
+    } finally {
+      setSending(false);
+    }
   };
 
   if (sent) {
     return (
       <div className="rounded-2xl border p-6" style={{ borderColor: "var(--accent)", background: "var(--surface)" }} role="status">
-        <p className="text-lg font-bold">Your mail app should now be open.</p>
+        <p className="text-lg font-bold">{stored ? "Message received — thank you." : "Your mail app should now be open."}</p>
         <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
-          This export has no server inbox, so your message opens addressed to {profile.email} — Shivam reads every inquiry personally and replies from there.
+          {stored
+            ? "Your message is stored in Shivam's inbox — he reads every inquiry personally and replies from there."
+            : `This site's server inbox is not connected yet, so your message opens addressed to ${profile.email} — Shivam reads every inquiry personally and replies from there.`}
         </p>
       </div>
     );
@@ -111,11 +142,11 @@ export function ContactForm() {
         <textarea aria-label="Message" className={cls} style={style} rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
       </label>
       {error && <p className="text-sm" style={{ color: "#f87171" }} role="alert">{error}</p>}
-      <button type="submit" className="rounded-xl px-6 py-3 font-semibold" style={{ background: "var(--accent)", color: "#04101a" }}>
-        Send message
+      <button type="submit" disabled={sending} className="rounded-xl px-6 py-3 font-semibold" style={{ background: "var(--accent)", color: "#04101a" }}>
+        {sending ? "Sending…" : "Send message"}
       </button>
       <p className="text-xs" style={{ color: "var(--muted)" }}>
-        This opens your mail app addressed to {profile.email} — the server-stored contact inbox lives in the Muse-hosted portfolio.
+        Sent to Shivam's inbox when the server is connected — otherwise it opens your mail app addressed to {profile.email}.
       </p>
     </form>
   );
