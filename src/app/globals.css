@@ -33,3 +33,18 @@ a { color: var(--accent); }
 .progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--a1), var(--a2), var(--a3)); z-index: 60; }
 .section-title { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; }
 .eyebrow { font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+
+/* Motion for the Command Centre / AgentForge (v8): subtle, and off when the
+   visitor prefers reduced motion. */
+@keyframes stage-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.stage-in { animation: stage-in .35s ease-out; }
+@keyframes forge-flow { to { stroke-dashoffset: -8; } }
+.forge-line-flow { stroke-dasharray: 3 3; animation: forge-flow 1.6s linear infinite; }
+@keyframes forge-float { 0%, 100% { transform: translate(-50%, -50%); } 50% { transform: translate(-50%, calc(-50% - 4px)); } }
+.forge-node-float { animation: forge-float 3.2s ease-in-out infinite; }
+@keyframes forge-breathe { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 25%, transparent); } 50% { box-shadow: 0 0 28px 4px color-mix(in srgb, var(--accent) 22%, transparent); } }
+.forge-core { animation: forge-breathe 3.2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .stage-in, .forge-line-flow, .forge-node-float, .forge-core { animation: none; }
+  html { scroll-behavior: auto; }
+}

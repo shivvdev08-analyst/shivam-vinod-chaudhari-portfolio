@@ -8,15 +8,20 @@ Live source: this repo. Deployed on Vercel from `main`.
 ## What this is
 
 A faithful Next.js (App Router, React, TypeScript, Tailwind CSS) export of the
-Muse-hosted portfolio **v5 “Neural Spectrum”** — same sections, same verified
+Muse-hosted portfolio **v8 “Neural Spectrum”** — same sections, same verified
 content, same four themes. No design or content changes were made for the export.
+This update brings the v8 reachability fixes to the public site: the Neural
+Command Centre auto-cycles Perceive → Reason → Act → Evaluate with a live stats
+board and Try-the-system buttons, the AgentForge map nodes are clickable with
+detail panels, and the hero has an Ask ASTRA button and a Neural Command Centre
+jump link.
 
 - **Themes:** Aurora (teal / violet / emerald, default), Verdant, Solar Forge, Ultraviolet — switchable from the header, choice remembered in the browser.
 - **Hero:** live neural-network canvas behind the hero, spectrum ring around Shivam's real photo (`public/photo.jpg`).
-- **Neural Command Centre:** Perceive / VERITAS → Reason / NOVA → Act / ASTRA → Evaluate / SafeGen.
+- **Neural Command Centre:** Perceive / VERITAS → Reason / NOVA → Act / ASTRA → Evaluate / SafeGen. Auto-cycles through the four stages until the visitor picks one, with a stats board counted from this site's own content (systems, in development, technologies, memories) and Try-the-system buttons for SafeGen, AgentForge and ASTRA.
 - **Stack Explorer, Spotlight project cards** with Simple + Deep Technical case-study pages (`/projects/[slug]`).
 - **Memories:** only the verified memory is seeded — Data4Viz, First Position at a Modern College of Engineering hackathon, with Team Alpha. No dates or details are invented for other visits.
-- **AgentForge System Map:** SafeGen, ASTRA, NOVA, SplitSage. VERITAS is deliberately excluded — it is a separate MCA capstone.
+- **AgentForge System Map:** SafeGen, ASTRA, NOVA, SplitSage — clickable nodes with detail panels (role, connections, stack, case-study links) and a planned outer ring. VERITAS is deliberately excluded — it is a separate MCA capstone.
 - **Live AI Lab:** interactive SafeGen Generate → Judge → Repair demo, clearly labelled a demo. It publishes no experimental metrics.
 - **Ask ASTRA:** static grounded FAQ on this export. The full server assistant lives in the Muse artifact (below).
 
@@ -31,8 +36,9 @@ content, same four themes. No design or content changes were made for the export
 ## Photo
 
 Shivam's real headshot lives at `public/photo.jpg` in the local export.
-**It is not in this first GitHub push:** the GitHub connector used for this
-upload can only push UTF-8 text files, not binary images. To finish it, upload
+**It is not in this GitHub repo (verified 2026-11-25: `public/photo.jpg` is not
+in the repo and returns 404 on the Vercel site):** the GitHub connector used for
+this upload can only push UTF-8 text files, not binary images. To finish it, upload
 `public/photo.jpg` (400×400 JPEG, from the local export) via GitHub web:
 repo → **Add file → Upload files** → drop `photo.jpg` into `public/` → Commit.
 Until then the hero shows an “SVC” monogram fallback instead of a broken image.

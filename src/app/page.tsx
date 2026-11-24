@@ -37,7 +37,11 @@ export default function Home() {
               <a className="btn" href="#projects">View Projects</a>
               <a className="btn-ghost" href="#contact">Contact</a>
               <a className="btn-ghost" href="/resume">Resume — available on request</a>
+              <a className="btn-ghost" href="#astra">◉ Ask ASTRA</a>
             </div>
+            <p className="mt-4 text-[11px] uppercase tracking-widest">
+              <a href="#command-centre">↓ Live — Neural Command Centre, the system in motion</a>
+            </p>
             <p className="mt-5 text-sm" style={{ color: "var(--muted)" }}>
               <a href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
               {" · "}
@@ -55,7 +59,7 @@ export default function Home() {
       </section>
 
       {/* Command Centre */}
-      <section className="mx-auto max-w-6xl px-4 pb-10"><CommandCentre /></section>
+      <div className="mx-auto max-w-6xl px-4 pb-10"><CommandCentre /></div>
 
       {/* Origin */}
       <section id="about" className="mx-auto max-w-6xl px-4 py-10">
@@ -165,7 +169,7 @@ export default function Home() {
       </section>
 
       {/* ASTRA — static grounded FAQ (the full server assistant lives in the Muse artifact) */}
-      <section className="mx-auto max-w-6xl px-4 py-10">
+      <section id="astra" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-10">
         <p className="eyebrow">Ask ASTRA</p>
         <h2 className="section-title mt-1">Answers, grounded only in this portfolio</h2>
         <p className="mt-2 text-sm" style={{ color: "var(--muted)" }}>
