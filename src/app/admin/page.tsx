@@ -53,7 +53,9 @@ export default function AdminPage() {
 
   const refreshStatus = useCallback(async () => {
     try {
-      const res = await fetch("/api/admin/status");
+      // cache: "no-store" — a cached status made /admin keep showing the
+      // setup page after a PIN was saved and redeployed (v13 bug).
+      const res = await fetch("/api/admin/status", { cache: "no-store" });
       const s = (await res.json()) as Status;
       setStatus(s);
       setLoadError("");
@@ -177,12 +179,25 @@ export default function AdminPage() {
   }
 
   // --- PIN not configured yet: setup checklist + in-browser hash helper ---
+  // NOTE: this branch is shown ONLY when pinSet is false. The database is
+  // NOT required for the PIN login form below — once pinSet is true the
+  // login form shows even with no database (with a DB warning instead).
   if (!status.pinSet) {
     return (
       <main className="mx-auto max-w-3xl px-4 py-16">
         <h1 className="text-3xl font-bold">Owner Admin — setup</h1>
         <p className="mt-2 text-sm" style={{ color: "var(--muted)" }}>
           The admin panel is ready, but no PIN is configured on this deployment yet. The public site is unaffected, and the Muse-hosted portfolio still works as the fallback admin.
+        </p>
+        <div className={`${card} mt-6 space-y-1 text-sm`} role="status">
+          <p className="font-semibold">Live status (checked just now):</p>
+          <p>✗ PIN: not configured — this page stays until a PIN hash is saved and redeployed</p>
+          <p>{status.dbConfigured ? "✓" : "✗"} Database: {status.dbConfigured ? "connected" : "not connected"}</p>
+          <p>{status.blobConfigured ? "✓" : "✗"} Blob uploads: {status.blobConfigured ? "connected" : "not connected"}</p>
+          <button onClick={() => void refreshStatus()} className={`${btn} mt-2`} style={{ border: "1px solid var(--border)" }}>Refresh status</button>
+        </div>
+        <p className="mt-4 text-sm" style={{ color: "var(--muted)" }}>
+          Just saved the PIN and redeployed but still seeing this page? Env vars only apply to a <b>new deployment</b> — save, then redeploy (Deployments → latest → Redeploy), then hard-refresh this page (Ctrl+Shift+R / Cmd+Shift+R). If it still says “not configured”, check in Vercel → Settings → Environment Variables that the Key is exactly <code>ADMIN_PIN_HASH</code> (with underscores — <code>ADMINPINHASH</code> does not count), the Value is the 64-character SHA-256 hash (not your PIN itself), and it is enabled for Production.
         </p>
         <div className={`${card} mt-6 space-y-3 text-sm`}>
           <p className="font-semibold">To finish setup (free, no card):</p>
@@ -192,7 +207,7 @@ export default function AdminPage() {
             <li><b>Uploads (optional):</b> Storage → Create Store → Blob → Free plan. Sets <code>BLOB_READ_WRITE_TOKEN</code>.</li>
             <li>Come back here, sign in, and tap “Create tables &amp; seed content”.</li>
           </ol>
-          <p className="text-xs" style={{ color: "var(--muted)" }}>Full steps: <code>docs/VERCEL_NEON_ADMIN.md</code> in the repo. The PIN is never sent anywhere — the hash is computed in this browser only.</p>
+          <p className="text-xs" style={{ color: "var(--muted)" }}>Full steps: <code>docs/VERCEL_NEON_ADMIN.md</code> in the repo. The PIN is never sent anywhere — the hash is computed in this browser only. The PIN login form appears as soon as the hash is saved and redeployed — the database is only needed for the inbox, content and analytics, not for signing in.</p>
         </div>
         <form
           className={`${card} mt-4 space-y-3`}
@@ -208,7 +223,7 @@ export default function AdminPage() {
             </div>
           )}
         </form>
-        <p className="mt-4 text-xs" style={{ color: "var(--muted)" }}>Database: {status.dbConfigured ? "connected" : "not connected"} · Blob: {status.blobConfigured ? "connected" : "not connected"}</p>
+        <p className="mt-4 text-xs" style={{ color: "var(--muted)" }}>PIN: ✗ not configured · Database: {status.dbConfigured ? "✓ connected" : "✗ not connected"} · Blob: {status.blobConfigured ? "✓ connected" : "✗ not connected"}</p>
       </main>
     );
   }
@@ -224,7 +239,7 @@ export default function AdminPage() {
           <input type="password" inputMode="numeric" autoComplete="current-password" value={pin} onChange={(e) => setPin(e.target.value)} placeholder="Enter your PIN" className="w-full rounded-xl border px-3.5 py-2.5 text-sm outline-none" style={{ borderColor: "var(--border)", background: "var(--bg)", color: "var(--text)" }} />
           {pinError && <p className="text-sm" style={{ color: "#f87171" }} role="alert">{pinError}</p>}
           <button type="submit" disabled={signingIn || !pin} className={btn} style={{ background: "var(--accent)", color: "#04101a" }}>{signingIn ? "Signing in…" : "Sign in"}</button>
-          <p className="text-xs" style={{ color: "var(--muted)" }}>Database: {status.dbConfigured ? "connected" : "not connected — sign-in works, but content and inbox need the Neon database (see docs/VERCEL_NEON_ADMIN.md)."}</p>
+          <p className="text-xs" style={{ color: "var(--muted)" }}>PIN: ✓ configured · Database: {status.dbConfigured ? "✓ connected" : "✗ not connected — sign-in works, but content and inbox need the Neon database (see docs/VERCEL_NEON_ADMIN.md)."} · Blob: {status.blobConfigured ? "✓ connected" : "✗ not connected"}</p>
         </form>
       </main>
     );
