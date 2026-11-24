@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root, [data-theme="aurora"] {
+  --bg: #05070f; --bg2: #0a0f1e; --surface: #0d1526; --surface2: #111c33;
+  --text: #eef4ff; --muted: #9fb0cc; --border: #1e2c4a;
+  --a1: #2dd4bf; --a2: #8b5cf6; --a3: #34d399; --accent: #38e1ff;
+}
+[data-theme="verdant"] {
+  --bg: #04100a; --bg2: #071a10; --surface: #0a2418; --surface2: #0e2f20;
+  --text: #eefdf3; --muted: #9cc4ab; --border: #1d4030;
+  --a1: #4ade80; --a2: #a3e635; --a3: #2dd4bf; --accent: #4ade80;
+}
+[data-theme="solar"] {
+  --bg: #120a04; --bg2: #1c1106; --surface: #241708; --surface2: #2f1e0a;
+  --text: #fff6e8; --muted: #c9ab84; --border: #4a3016;
+  --a1: #fbbf24; --a2: #f97316; --a3: #facc15; --accent: #fbbf24;
+}
+[data-theme="ultraviolet"] {
+  --bg: #0d0518; --bg2: #150a26; --surface: #1c1032; --surface2: #251743;
+  --text: #f3efff; --muted: #b3a6d6; --border: #372a5a;
+  --a1: #a78bfa; --a2: #e879f9; --a3: #818cf8; --accent: #c084fc;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: ui-sans-system, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--accent); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; }
+.chip { border: 1px solid var(--border); border-radius: 999px; padding: .2rem .65rem; font-size: .75rem; color: var(--muted); }
+.btn { display: inline-block; border-radius: 999px; padding: .65rem 1.2rem; font-weight: 600; background: linear-gradient(90deg, var(--a1), var(--a2)); color: #04101a; }
+.btn-ghost { display: inline-block; border-radius: 999px; padding: .65rem 1.2rem; font-weight: 600; border: 1px solid var(--border); color: var(--text); }
+.spectrum-ring { background: conic-gradient(var(--a1), var(--a2), var(--a3), var(--a1)); padding: 4px; border-radius: 999px; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--a1), var(--a2), var(--a3)); z-index: 60; }
+.section-title { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; }
+.eyebrow { font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
