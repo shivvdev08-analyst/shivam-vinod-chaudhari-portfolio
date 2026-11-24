@@ -40,7 +40,7 @@ export default function Home() {
             <div className="mt-6 flex flex-wrap gap-3">
               <a className="btn" href="#projects">View Projects</a>
               <a className="btn-ghost" href="#contact">Contact</a>
-              <a className="btn-ghost" href="/resume">Resume — available on request</a>
+              <a className="btn-ghost" href="/Shivam-Vinod-Chaudhari-Resume.pdf" download>⬇ Download Resume</a>
               <a className="btn-ghost" href="#astra">◉ Ask ASTRA</a>
             </div>
             <p className="mt-4 text-[11px] uppercase tracking-widest">

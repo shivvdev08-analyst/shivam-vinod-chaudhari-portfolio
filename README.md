@@ -18,6 +18,8 @@ beyond the v9 features below.
 - **Tech ticker:** the stack streams right-to-left directly above the Command Centre, with FastAPI, PostgreSQL and pgvector leading, followed by every published skill.
 - **ASTRA orb:** a real bottom-right chat orb on every page. It answers on-device, strictly from this site's published portfolio data (profile, projects, skills, education, experience, achievements) — no server, no invented answers. The FAQ section below it keeps the verified answers.
 - **Origin paths:** the four career directions (AI Engineer, Machine Learning Engineer, Data Scientist, Full-Stack AI Product Engineer) are clickable buttons on Home and on the new About page (`/about`) — each swaps an animated panel with its story, skill chips and case-study links.
+- **Owner Admin buttons:** the header and footer carry real, filled Admin buttons (not plain text) that open the `/admin` page. The live PIN-gated console itself (content, inbox, analytics) runs on the Muse-hosted portfolio — this static export has no server to verify a PIN — and the `/admin` page says exactly that and points Shivam to the console.
+- **Resume PDF:** `public/Shivam-Vinod-Chaudhari-Resume.pdf` is a genuine PDF binary (generated from the published portfolio content, same file the Muse-hosted site serves) — the hero and Resume page download it directly, free, with no permission step.
 - **Contact, canonical:** one shared surface — the homepage contact section and the new Contact page (`/contact`) show identical channel cards (email, GitHub, LinkedIn, location, status, Ask ASTRA) and the same form. The form opens the visitor's mail app addressed to Shivam; the server-stored inbox stays in the Muse artifact.
 - **Reveal on scroll:** Origin, Timeline/Achievements, Memories and About sections rise in as they enter the viewport (with a safety net so nothing stays invisible).
 - **Stack Explorer, Spotlight project cards** with Simple + Deep Technical case-study pages (`/projects/[slug]`).
@@ -78,3 +80,4 @@ No PINs, admin credentials, API keys or secrets are in this repo.
 - GitHub: https://github.com/shivvdev08-analyst
 - LinkedIn: https://www.linkedin.com/in/shivam-chaudhari-30a5ba3a8/
 - Email: shivv.dev08@gmail.com
+

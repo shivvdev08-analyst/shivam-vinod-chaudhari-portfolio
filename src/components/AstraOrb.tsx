@@ -89,7 +89,7 @@ export function localAstraAnswer(question: string): { text: string; sources: str
   }
   if (has("resume", "cv")) {
     return {
-      text: "Shivam's PDF resume isn't uploaded here yet — the Resume page shows the current summary, and you can request the PDF through the contact form.",
+      text: "Shivam's resume is a free PDF download from the Resume page of this site — no sign-up or permission needed.",
       sources: ["Resume page"],
     };
   }

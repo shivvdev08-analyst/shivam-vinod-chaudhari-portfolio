@@ -30,7 +30,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <a href="/#lab">AI Lab</a>
               <a href="/contact">Contact</a>
             </nav>
-            <ThemeSwitcher />
+            <div className="flex items-center gap-3">
+              <a
+                href="/admin"
+                aria-label="Open Owner Admin panel"
+                className="btn"
+                style={{ padding: ".5rem 1rem" }}
+              >
+                Admin
+              </a>
+              <ThemeSwitcher />
+            </div>
           </div>
         </header>
         <main>{children}</main>
@@ -48,10 +58,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {" · "}
               <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
             </p>
-            <p className="mt-2">
-              Owner Admin, the contact inbox and analytics live in the Muse-hosted
-              portfolio — this Vercel export is the public site only. ASTRA here
-              answers on-device from the published portfolio data. See README.md in this repo.
+            <p className="mt-4">
+              <a
+                href="/admin"
+                aria-label="Open Owner Admin panel"
+                className="btn"
+                style={{ padding: ".55rem 1.1rem" }}
+              >
+                Owner Admin — sign in
+              </a>
+            </p>
+            <p className="mt-3">
+              ASTRA here answers on-device from the published portfolio data.
+              See README.md in this repo.
             </p>
           </div>
         </footer>
