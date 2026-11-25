@@ -31,14 +31,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <a href="/contact">Contact</a>
             </nav>
             <div className="flex items-center gap-3">
-              <a
-                href="/admin"
-                aria-label="Open Owner Admin panel"
-                className="btn"
-                style={{ padding: ".5rem 1rem" }}
-              >
-                Admin
-              </a>
               <ThemeSwitcher />
             </div>
           </div>
@@ -57,16 +49,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <a href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
               {" · "}
               <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
-            </p>
-            <p className="mt-4">
-              <a
-                href="/admin"
-                aria-label="Open Owner Admin panel"
-                className="btn"
-                style={{ padding: ".55rem 1.1rem" }}
-              >
-                Owner Admin — sign in
-              </a>
+              {" · "}
+              <a href="/admin" aria-label="Owner Admin sign in">Admin</a>
             </p>
             <p className="mt-3">
               ASTRA here answers on-device from the published portfolio data.
