@@ -11,7 +11,7 @@ export async function GET() {
   // setup page after a PIN was saved and redeployed (v13 bug).
   return NextResponse.json(
     {
-      version: "v13",
+      version: "v14",
       dbConfigured,
       pinSet,
       blobConfigured: Boolean(process.env.BLOB_READ_WRITE_TOKEN),

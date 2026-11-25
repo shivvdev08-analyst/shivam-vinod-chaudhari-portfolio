@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSql } from "@/lib/db";
 import { readSessionToken, verifySessionToken } from "@/lib/admin-auth";
-import { projects } from "@/data/portfolio";
+import { projects, skillGroups, profile } from "@/data/portfolio";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -23,6 +23,9 @@ const STATEMENTS: string[] = [
   "CREATE INDEX IF NOT EXISTS login_attempts_created_idx ON login_attempts (created_at DESC)",
   "CREATE TABLE IF NOT EXISTS knowledge_entries (id SERIAL PRIMARY KEY, question TEXT NOT NULL, answer TEXT NOT NULL, source TEXT NOT NULL DEFAULT '', created_at TIMESTAMPTZ NOT NULL DEFAULT now())",
   "CREATE TABLE IF NOT EXISTS resumes (id SERIAL PRIMARY KEY, label TEXT NOT NULL, blob_url TEXT NOT NULL, is_default BOOLEAN NOT NULL DEFAULT false, is_public BOOLEAN NOT NULL DEFAULT true, created_at TIMESTAMPTZ NOT NULL DEFAULT now())",
+  "CREATE TABLE IF NOT EXISTS skills (id SERIAL PRIMARY KEY, name TEXT NOT NULL, category TEXT NOT NULL DEFAULT 'General', level TEXT NOT NULL DEFAULT '', sort_order INTEGER NOT NULL DEFAULT 0, updated_at TIMESTAMPTZ NOT NULL DEFAULT now())",
+  "CREATE INDEX IF NOT EXISTS skills_category_idx ON skills (category, sort_order)",
+  "CREATE TABLE IF NOT EXISTS agentforge_nodes (slug TEXT PRIMARY KEY, title TEXT NOT NULL, tagline TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'planning', stack JSONB NOT NULL DEFAULT '[]'::jsonb, description TEXT NOT NULL DEFAULT '', sort_order INTEGER NOT NULL DEFAULT 0, updated_at TIMESTAMPTZ NOT NULL DEFAULT now())",
 ];
 
 const KNOWLEDGE: Array<[string, string, string]> = [
@@ -31,6 +34,26 @@ const KNOWLEDGE: Array<[string, string, string]> = [
   ["What is VERITAS?", "His MCA capstone with Divya Padukone — a multimodal document intelligence platform: EasyOCR, MiniLM 384-dim embeddings, PostgreSQL/pgvector semantic search, FastAPI.", "VERITAS case study"],
   ["What is ASTRA?", "His personal AI companion, in development — voice-first, local AI via Ollama, application launching and long-term memory.", "ASTRA case study"],
   ["Is he open to work?", "Open to AI engineering internships and entry-level roles.", "Profile"],
+];
+
+
+const AGENTFORGE: Array<[string, string, string, string, string[], string, number]> = [
+  ["safegen", "SafeGen AI", "Self-reflective LLM evaluation", "in-progress", ["Python", "FastAPI", "Groq"], "Generate → Judge → Repair: evaluates LLM outputs and repairs them.", 1],
+  ["astra", "ASTRA", "The Future, Within Reach.", "in-development", ["Python", "Ollama", "Local LLMs"], "Personal AI companion — voice-first, local AI, long-term memory.", 2],
+  ["nova", "NOVA Agent", "Agent reasoning", "planning", ["Python", "LangGraph", "CrewAI"], "Agent reasoning layer — planned.", 3],
+  ["splitsage", "SplitSage AI", "Split expenses, smartly", "completed", ["Next.js", "Express", "PostgreSQL", "Prisma", "OCR", "Groq"], "MVP completed.", 4],
+];
+
+const PROFILE_SEED: Array<[string, string]> = [
+  ["profile.name", profile.name],
+  ["profile.role", profile.role],
+  ["profile.tagline", profile.tagline],
+  ["profile.intro", profile.intro],
+  ["profile.location", profile.location],
+  ["profile.availability", profile.availability],
+  ["appearance.default_theme", "aurora"],
+  ["seo.title", "Shivam Vinod Chaudhari — Aspiring AI Engineer"],
+  ["seo.description", "Aspiring AI Engineer & Full-Stack Developer. Turning intelligence into innovation."],
 ];
 
 export async function POST(req: Request) {
@@ -51,6 +74,19 @@ export async function POST(req: Request) {
     await sql`INSERT INTO memories (title, category, place, story, tags, featured, published) VALUES ('Data4Viz — First Position at the Hackathon', 'academic', '', 'Data4Viz — the AI-powered exploratory data analysis automation app built with Team Alpha — won First Position at a Modern College of Engineering hackathon.', ${JSON.stringify(["Hackathon", "Data4Viz", "Team Alpha", "Winner"])}, true, true) ON CONFLICT DO NOTHING`;
     for (const [q, a, s] of KNOWLEDGE) {
       await sql`INSERT INTO knowledge_entries (question, answer, source) SELECT ${q}, ${a}, ${s} WHERE NOT EXISTS (SELECT 1 FROM knowledge_entries WHERE question = ${q})`;
+    }
+    for (const g of skillGroups) {
+      let i = 0;
+      for (const name of g.skills) {
+        await sql`INSERT INTO skills (name, category, level, sort_order) SELECT ${name}, ${g.name}, '', ${i} WHERE NOT EXISTS (SELECT 1 FROM skills WHERE name = ${name} AND category = ${g.name})`;
+        i++;
+      }
+    }
+    for (const [slug, title, tagline, status, stack, description, order] of AGENTFORGE) {
+      await sql`INSERT INTO agentforge_nodes (slug, title, tagline, status, stack, description, sort_order) VALUES (${slug}, ${title}, ${tagline}, ${status}, ${JSON.stringify(stack)}, ${description}, ${order}) ON CONFLICT (slug) DO NOTHING`;
+    }
+    for (const [k, v] of PROFILE_SEED) {
+      await sql`INSERT INTO admin_settings (key, value) VALUES (${k}, ${v}) ON CONFLICT (key) DO NOTHING`;
     }
     await sql`INSERT INTO audit_log (actor, action, detail) VALUES ('owner', 'setup', 'Tables created and verified content seeded')`;
     return NextResponse.json({ ok: true, seededProjects: projects.length });

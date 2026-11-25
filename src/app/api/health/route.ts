@@ -8,7 +8,7 @@ export async function GET() {
   return NextResponse.json(
     {
       ok: true,
-      version: "v13",
+      version: "v14",
       dbConfigured: isDbConfigured(),
       pinSet: isPinSet(),
       blobConfigured: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
